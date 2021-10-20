@@ -9,6 +9,7 @@ import numpy as np
 import datetime
 # from datetime import datetime
 from flask.helpers import url_for
+import openpyxl
 
 app = Flask(__name__)
 
@@ -105,22 +106,16 @@ def home():
         max = request.form['max']
         recordDate = request.form['date']
         mobileNo = request.form['number']
+        f = request.files['file']
+        name = f.filename
+        print(min, max, recordDate, mobileNo, type(min), type(max), type(recordDate), type(mobileNo))
+        # print(type(f))
 
         # print(min, max, recordDate, type(recordDate), mobileNo, type(mobileNo))
 
-        if csvFile == 'uploaded':
-            # if 'csv' in csvFile:
-            f = request.files['file']
-            stream = io.StringIO(f.stream.read().decode("UTF8"), newline=None)
-            csv_file = csv.DictReader(stream)
-            for row in csv_file:
-                
-                para = duration(row['Start'], row['End'])
-                row['Duration'] = para[0]
-                row['Start'] = para[1] 
-                row['End'] = para[2]
-
-                data.append(row)
+        if name == '':
+            data = generateDictArray(csvFile)
+            
             # print(data)
 
                 # uploaded_file = request.files['file']
@@ -132,10 +127,28 @@ def home():
             # else:
             #     print(jsonify({"result": request.get_array(field_name='file')}))
 
-        else:
+        elif 'csv' in name:
+            stream = io.StringIO(f.stream.read().decode("UTF8"), newline=None)
+            csv_file = csv.DictReader(stream)
+            for row in csv_file:
+                
+                para = duration(row['Start'], row['End'])
+                row['Duration'] = para[0]
+                row['Start'] = para[1] 
+                row['End'] = para[2]
+
+                data.append(row)
+
+        elif 'xlsx' in name:
+            data_xls = pd.read_excel(f)
+            file = data_xls.to_csv ('static/target.csv', index = None, header=True)
+            csvFile = 'target'
             data = generateDictArray(csvFile)
 
-        filteredData = filterData(data, min, max, recordDate, mobileNo)
+        if min == '' and max == '' and recordDate == '' and mobileNo == '':
+            filteredData = data
+        else:
+            filteredData = filterData(data, min, max, recordDate, mobileNo)
 
         display = 'display: block'
        
