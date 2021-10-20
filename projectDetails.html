@@ -1,2 +1,39 @@
 {% extends 'base.html' %}
-<p>This is the project detaikas page</p>
+{% block body %}
+	<style type="text/css">
+		body{
+			font-size: 20px;
+			font-weight: bold;
+		}
+		
+		.box{
+			margin-bottom: 25px;	
+		}
+
+        #cen{
+            text-align: center;
+        }
+	</style>
+    <div class ="container my-3 border border-3 border border-white rounded-3 p-3 bg-dark bg-opacity-90 shadow" >
+	<h2 class="text-white ">Project Details Page</h2>
+	<h3 class="text-white ">Technologies Stack Used</h3>
+	<ul>
+	  <li class="text-white ">Python
+	  	<ul >
+  		  <li class="text-white ">Flask</li>
+		  <li class="text-white ">Matplotlib</li>
+		  <li class="text-white ">Plotly</li>
+		  <li class="text-white ">Pandas</li>
+		</ul>
+	  </li>
+	  <li class="text-white ">Javascript</li>
+	  <li class="text-white ">HTML</li>
+	  <li class="text-white ">CSS</li>
+	</ul>
+	<div class = "d-flex justify-content-center" id = "cen"><div class='box text-white'>Devloped By:
+		<div class="text-white " id = "cen">Divyanshu Deoli <a href="https://github.com/divyanshudeoli">Github</a></div>
+		<div class="text-white " id = "cen">Kartik Garg <a href="https://github.com/kartikk-garg">Github</a></div>
+	</div>
+    </div>
+</div>
+{% endblock body%}
