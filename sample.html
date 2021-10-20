@@ -4,7 +4,7 @@
 
 
 <div class="container my-3">
-    <div class="mb-3 d-flex justify-content-start">
+    <div class="mb-3 d-flex justify-content-START">
       <button class="btn btn-primary" onclick="openCity(event, 'London')">Sample 1</button>
       <button class="btn btn-primary" onclick="openCity(event, 'Paris')">Sample 2</button>
       <button class="btn btn-primary" onclick="openCity(event, 'Tokyo')">Sample 3</button>
@@ -13,21 +13,23 @@
     <div id="London" class="tabcontent">
       <div class="container my-3 border border-3 border border-white rounded-3 p-3 bg-dark bg-opacity-90 shadow"><h3 class= "text-white" >Sample 1</h3></div>
 
-      <!-- PHONE,IMEI1,IMEI2,TYPE,IMSI,Start,End,Cell -->
+      <!-- PHONE,IMEI1,IMEI2,TYPE,IMSI,START,End,Cell -->
       
       <table class="table border border-3 border border-white rounded-3 p-3 bg-dark bg-opacity-90 shadow">
           <th class="text-white"ead>
             <tr>
-              <th class="text-white" scope="col" >SNo</th>
-              <th class="text-white" scope="col" >PHONE</th>
-              <th class="text-white" scope="col" >TYPE</th>
-              <th class="text-white" scope="col" >Start</th>
-              <th class="text-white" scope="col" >End</th>
-              <th class="text-white" scope="col" >Cell</th>
-              <th class="text-white" scope="col" >IMSI</th>
-              <th class="text-white" scope="col" >IMEI1 </th>
-              <th class="text-white" scope="col" >IMEI2</th> 
-              <th class="text-white" scope="col" >Duration</th>               
+              <th scope="col" class="text-white">SNo</th>
+              <th scope="col" class="text-white" >PHONE</th>
+              <th scope="col" class="text-white">TYPE</th>
+              <th scope="col" class="text-white">START</th>
+              <th scope="col" class="text-white">END</th>
+              <th scope="col" class="text-white">DURATION(S)</th>
+              <th scope="col" class="text-white">TOWER</th>
+              <th scope="col" class="text-white">IMEI1 </th>
+              <th scope="col" class="text-white">IMEI2</th> 
+              <th scope="col" class="text-white">LATITUDE</th>
+              <th scope="col" class="text-white">LONGITUDE</th>
+              <th scope="col" class="text-white">OPERATOR</th>              
             </tr>
           </thead>
 
@@ -36,15 +38,17 @@
             
             <tr>
               <th class="text-white" scope="row">{{loop.index}}</th>
-              <td class="text-white"> {{i['PHONE']}} </td>
+              <td class="text-white" > {{i['PHONE']}} </td>
               <td class="text-white"> {{i['TYPE']}} </td>
-              <td class="text-white"> {{i['Start']}} </td>
-              <td class="text-white"> {{i['End']}} </td>
-              <td class="text-white"> {{i['Cell']}} </td>
-              <td class="text-white"> {{i['IMSI']}} </td>
+              <td class="text-white"> {{i['START']}} </td>
+              <td class="text-white"> {{i['END']}} </td>
+              <td class="text-white"> {{i['DURATION']}} </td>
+              <td class="text-white"> {{i['TOWER']}} </td>
               <td class="text-white"> {{i['IMEI1']}} </td>
               <td class="text-white"> {{i['IMEI2']}} </td>
-              <td class="text-white"> {{i['Duration']}} </td>
+              <td class="text-white"> {{i['LATITUDE']}} </td>
+              <td class="text-white"> {{i['LONGITUDE']}} </td>
+              <td class="text-white"> {{i['OPERATORS']}} </td>
             </tr>
   
       {% endfor %}
@@ -58,16 +62,18 @@
       <table class="table border border-3 border border-white rounded-3 p-3 bg-dark bg-opacity-90 shadow">
         <th class="text-white"ead>
           <tr>
-            <th class="text-white" scope="col" >SNo</th>
-            <th class="text-white" scope="col" >PHONE</th>
-            <th class="text-white" scope="col" >TYPE</th>
-            <th class="text-white" scope="col" >Start</th>
-            <th class="text-white" scope="col" >End</th>
-            <th class="text-white" scope="col" >Cell</th>
-            <th class="text-white" scope="col" >IMSI</th>
-            <th class="text-white" scope="col" >IMEI1 </th>
-            <th class="text-white" scope="col" >IMEI2</th> 
-            <th class="text-white" scope="col" >Duration</th>               
+            <th scope="col" class="text-white">SNo</th>
+              <th scope="col" class="text-white" >PHONE</th>
+              <th scope="col" class="text-white">TYPE</th>
+              <th scope="col" class="text-white">START</th>
+              <th scope="col" class="text-white">END</th>
+              <th scope="col" class="text-white">DURATION(S)</th>
+              <th scope="col" class="text-white">TOWER</th>
+              <th scope="col" class="text-white">IMEI1 </th>
+              <th scope="col" class="text-white">IMEI2</th> 
+              <th scope="col" class="text-white">LATITUDE</th>
+              <th scope="col" class="text-white">LONGITUDE</th>
+              <th scope="col" class="text-white">OPERATOR</th>               
           </tr>
         </thead>
         <tbody></tbody>
@@ -76,15 +82,17 @@
           
           <tr>
             <th class="text-white" scope="row">{{loop.index}}</th>
-            <td class="text-white"> {{i['PHONE']}} </td>
-            <td class="text-white"> {{i['TYPE']}} </td>
-            <td class="text-white"> {{i['Start']}} </td>
-            <td class="text-white"> {{i['End']}} </td>
-            <td class="text-white"> {{i['Cell']}} </td>
-            <td class="text-white"> {{i['IMSI']}} </td>
-            <td class="text-white"> {{i['IMEI1']}} </td>
-            <td class="text-white"> {{i['IMEI2']}} </td>
-            <td class="text-white"> {{i['Duration']}} </td>
+              <td class="text-white" > {{i['PHONE']}} </td>
+              <td class="text-white"> {{i['TYPE']}} </td>
+              <td class="text-white"> {{i['START']}} </td>
+              <td class="text-white"> {{i['END']}} </td>
+              <td class="text-white"> {{i['DURATION']}} </td>
+              <td class="text-white"> {{i['TOWER']}} </td>
+              <td class="text-white"> {{i['IMEI1']}} </td>
+              <td class="text-white"> {{i['IMEI2']}} </td>
+              <td class="text-white"> {{i['LATITUDE']}} </td>
+              <td class="text-white"> {{i['LONGITUDE']}} </td>
+              <td class="text-white"> {{i['OPERATORS']}} </td>
           </tr>
         
     {% endfor %}
@@ -98,16 +106,18 @@
       <table class="table border border-3 border border-white rounded-3 p-3 bg-dark bg-opacity-90 shadow">
         <th class="text-white"ead>
           <tr>
-            <th class="text-white" scope="col" >SNo</th>
-            <th class="text-white" scope="col" >PHONE</th>
-            <th class="text-white" scope="col" >TYPE</th>
-            <th class="text-white" scope="col" >Start</th>
-            <th class="text-white" scope="col" >End</th>
-            <th class="text-white" scope="col" >Cell</th>
-            <th class="text-white" scope="col" >IMSI</th>
-            <th class="text-white" scope="col" >IMEI1 </th>
-            <th class="text-white" scope="col" >IMEI2</th>  
-            <th class="text-white" scope="col" >Duration</th>               
+            <th scope="col" class="text-white">SNo</th>
+              <th scope="col" class="text-white" >PHONE</th>
+              <th scope="col" class="text-white">TYPE</th>
+              <th scope="col" class="text-white">START</th>
+              <th scope="col" class="text-white">END</th>
+              <th scope="col" class="text-white">DURATION(S)</th>
+              <th scope="col" class="text-white">TOWER</th>
+              <th scope="col" class="text-white">IMEI1 </th>
+              <th scope="col" class="text-white">IMEI2</th> 
+              <th scope="col" class="text-white">LATITUDE</th>
+              <th scope="col" class="text-white">LONGITUDE</th>
+              <th scope="col" class="text-white">OPERATOR</th>             
           </tr>
         </thead>
         <tbody></tbody>
@@ -116,15 +126,17 @@
           
           <tr>
             <th class="text-white" scope="row">{{loop.index}}</th>
-            <td class="text-white"> {{i['PHONE']}} </td>
-            <td class="text-white"> {{i['TYPE']}} </td>
-            <td class="text-white"> {{i['Start']}} </td>
-            <td class="text-white"> {{i['End']}} </td>
-            <td class="text-white"> {{i['Cell']}} </td>
-            <td class="text-white"> {{i['IMSI']}} </td>
-            <td class="text-white"> {{i['IMEI1']}} </td>
-            <td class="text-white"> {{i['IMEI2']}} </td>
-            <td class="text-white"> {{i['Duration']}} </td>
+              <td class="text-white" > {{i['PHONE']}} </td>
+              <td class="text-white"> {{i['TYPE']}} </td>
+              <td class="text-white"> {{i['START']}} </td>
+              <td class="text-white"> {{i['END']}} </td>
+              <td class="text-white"> {{i['DURATION']}} </td>
+              <td class="text-white"> {{i['TOWER']}} </td>
+              <td class="text-white"> {{i['IMEI1']}} </td>
+              <td class="text-white"> {{i['IMEI2']}} </td>
+              <td class="text-white"> {{i['LATITUDE']}} </td>
+              <td class="text-white"> {{i['LONGITUDE']}} </td>
+              <td class="text-white"> {{i['OPERATORS']}} </td>
           </tr>
          
   
