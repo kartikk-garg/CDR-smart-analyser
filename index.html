@@ -2,7 +2,7 @@
 {% extends 'base.html' %}
   
 {% block head %}
-        
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 {% endblock head %}
     
 {% block body %}
@@ -56,16 +56,18 @@
 </div>
 
 <div class="container my-3 bg-light rounded-3 pt-2 border border-dark" style="{{display}}">
-<div class="mb-3 d-flex justify-content-start ">
+<div class="mb-3 d-flex justify-content-start border-bottom">
   <div class="p-2 d-flex justify-content-start ">
-    <button class="btn-outline-dark btn-lg mx-2" onclick="openCity(event, 'London')">Custom Filtered</button>
-    <button class="btn-outline-dark btn-lg mx-2" onclick="openCity(event, 'Paris')">Paris</button>
-    <button class="btn-outline-dark btn-lg mx-2" onclick="openCity(event, 'Tokyo')">Tokyo</button>
+    <button class="btn-outline-dark btn-lg mx-2" onclick="openCity(event, 'customfilter')" data-toggle="tooltip" data-placement="bottom" title="Filters data upon parameters given above">Custom Filtered</button>
+    <button class="btn-outline-dark btn-lg mx-2" onclick="openCity(event, 'Frequency')" data-toggle="tooltip" data-placement="bottom" title="shows the people who has been most contacted with">Frequency</button>
+    <button class="btn-outline-dark btn-lg mx-2" onclick="openCity(event, 'TYPE')" data-toggle="tooltip" data-placement="bottom" title="shows the count of each type of record">TYPE</button>
+    <button class="btn-outline-dark btn-lg mx-2" onclick="openCity(event, 'IMEI')" data-toggle="tooltip" data-placement="bottom" title="shows the most used IMEI's in the record">IMEI</button>
+    <button class="btn-outline-dark btn-lg mx-2" onclick="openCity(event, 'Location')" data-toggle="tooltip" data-placement="bottom" title="shows the location of contact" >Location</button>
   </div>
 </div>
 
 
-<div id="London" class="tabcontent">
+<div id="customfilter" class="tabcontent">
   <div class="container my-3 border border-3 border border-white rounded-3 p-3 bg-dark bg-opacity-90 shadow"><h3  class="text-white "><u>Custom Filtered</u></h3></div>
 
       <!-- PHONE,IMEI1,IMEI2,TYPE,IMSI,Start,End,Cell -->
@@ -75,13 +77,15 @@
               <th scope="col" class="text-white">SNo</th>
               <th scope="col" class="text-white" >PHONE</th>
               <th scope="col" class="text-white">TYPE</th>
-              <th scope="col" class="text-white">Start</th>
-              <th scope="col" class="text-white">End</th>
-              <th scope="col" class="text-white">Cell</th>
-              <th scope="col" class="text-white">IMSI</th>
+              <th scope="col" class="text-white">START</th>
+              <th scope="col" class="text-white">END</th>
+              <th scope="col" class="text-white">DURATION(S)</th>
+              <th scope="col" class="text-white">TOWER</th>
               <th scope="col" class="text-white">IMEI1 </th>
               <th scope="col" class="text-white">IMEI2</th> 
-              <th scope="col" class="text-white">Duration(s)</th>               
+              <th scope="col" class="text-white">LATITUDE</th>
+              <th scope="col" class="text-white">LONGITUDE</th>
+              <th scope="col" class="text-white">OPERATOR</th>       
             </tr>
           </thead>
           <tbody></tbody>
@@ -97,13 +101,16 @@
               <th class="text-white" scope="row">{{loop.index}}</th>
               <td class="text-white" > {{i['PHONE']}} </td>
               <td class="text-white"> {{i['TYPE']}} </td>
-              <td class="text-white"> {{i['Start']}} </td>
-              <td class="text-white"> {{i['End']}} </td>
-              <td class="text-white"> {{i['Cell']}} </td>
-              <td class="text-white"> {{i['IMSI']}} </td>
+              <td class="text-white"> {{i['START']}} </td>
+              <td class="text-white"> {{i['END']}} </td>
+              <td class="text-white"> {{i['DURATION']}} </td>
+              <td class="text-white"> {{i['TOWER']}} </td>
               <td class="text-white"> {{i['IMEI1']}} </td>
               <td class="text-white"> {{i['IMEI2']}} </td>
-              <td class="text-white"> {{i['Duration']}} </td>
+              <td class="text-white"> {{i['LATITUDE']}} </td>
+              <td class="text-white"> {{i['LONGITUDE']}} </td>
+              <td class="text-white"> {{i['OPERATORS']}} </td>
+              
             </tr>
   
       {% endfor %}
@@ -111,15 +118,24 @@
     </table>
 </div>
 
-<div id="Paris" class="tabcontent">
-  <h class="text-white"3>Paris</h3>
-  <p class="text-white">Paris is the capital of France.</p> 
+<div id="Frequency" class="tabcontent">
+  <div class="container my-3 border border-3 border border-white rounded-3 p-3 bg-dark bg-opacity-90 shadow"><h3  class="text-white "><u>Frequency</u></h3></div>
+ <div class= "container my-4 d-flex justify-content-center"><img src = "/frequency.png" alt = "my plot"></div>
 </div>
 
-<div id="Tokyo" class="tabcontent">
-  <h3 class="text-white">Tokyo</h3>
-  <p class="text-white">Tokyo is the capital of Japan.</p>
+<div id="TYPE" class="tabcontent">
+  <div class="container my-3 border border-3 border border-white rounded-3 p-3 bg-dark bg-opacity-90 shadow"><h3  class="text-white "><u>TYPE</u></h3></div>
+  <div class= "container my-4 d-flex justify-content-center"><img src = '/type.png' alt = "my plot"></div>
 </div>
+
+<div id="IMEI" class="tabcontent">
+  <div class="container my-3 border border-3 border border-white rounded-3 p-3 bg-dark bg-opacity-90 shadow"><h3  class="text-white "><u>IMEI</u></h3></div>
+  <div class= "container my-4 d-flex justify-content-center"><img src="/imei.png" alt="my plot"></div>
+</div>
+
+<div id="Location" class="tabcontent"> 
+</div>
+
 </div>
 
 <script>
@@ -136,6 +152,29 @@ function openCity(evt, cityName) {
   document.getElementById(cityName).style.display = "block";
   evt.currentTarget.className += " active";
 }
+</script>
+
+<script type="text/javascript">
+  var data = [{
+  type: 'scattergeo',
+  mode: 'markers+text',
+  lon: {{array[8]}},
+  lat: {{array[7]}},
+  marker: {
+      size: 7,
+      line: {
+          width: 1
+      }
+  },
+  name: 'Phone Location',
+}];
+var layout = {
+  'geo': {
+      'resolution': 400
+  }
+};
+Plotly.newPlot('Location', data, layout);
+console.log(data);
 </script>
 
 
