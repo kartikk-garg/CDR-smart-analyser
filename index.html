@@ -11,8 +11,9 @@
   <form class= "form" action="/" method="POST" enctype="multipart/form-data">
 
         <div class="mb-3">
+          <div class="container my-1 border border-3 border border-white rounded-3 p-3 bg-dark bg-opacity-90 shadow"><h2  class="text-white ">CDR Smart Analyser</h2></div>
 
-          <label for="selected" class="mb-3 d-inline-flex ps-1 text-white" required>Choose a Sample:</label>
+          <label for="selected" class="my-3 d-inline-flex ps-1 text-white" required>Choose a Sample:</label>
           <select name="selected" id="cars" required>
             <option value="Sample1">Sample1</option>
             <option value="Sample2">Sample2</option>
@@ -24,7 +25,7 @@
             
       <div class="mb-3">
         <label for="file" class="form-label  text-white " >Upload Excel, CSV (*Upload The Csv/Excel in the desried format):   </label>
-        <div class="mb-3 d-inline-flex ps-3"><input type="file" class="form-control" name="file" id="query" aria-describedby="emailHelp" value="False"/></div>
+        <div class="mb-3 d-inline-flex ps-3"><input type="file" accept=".csv, .xlsx" class="form-control" name="file" id="query" aria-describedby="emailHelp" value="False"/></div>
       </div>
         
 
@@ -47,18 +48,20 @@
 
       <div class="mb-3">
           <label for="number" class="form-label text-white" >Enter number you want to check details with: </label>
-          <div class="mb-3 d-inline-flex ps-2"><input type="number" class="form-control"  name="number" id="type" placeholder="eg. 8103312242" value="False"/></div>
+          <div class="mb-3 d-inline-flex ps-2"><input type="text" pattern = '[1-9]|[1-9][0-9]|[0-9][0-9][0-9][0-9][0-9][0-9][0-9]'class="form-control"  name="number" maxlength = "10" id="type" placeholder="eg. 8103312242" /></div>
       </div>
       
-      <button type="submit" class=" btn btn-primary ">Filter</button>
+      <div class="d-flex justify-content-center"><button type="submit" class=" btn btn-primary px-3 "><b>Filter</b></button></div>>
   </form>
 </div>
 
-<div class="container my-3" style="{{display}}">
-<div class="mb-3 d-flex justify-content-start">
-  <button class="btn btn-primary" onclick="openCity(event, 'London')">Custom Filtered</button>
-  <button class="btn btn-primary" onclick="openCity(event, 'Paris')">Paris</button>
-  <button class="btn btn-primary" onclick="openCity(event, 'Tokyo')">Tokyo</button>
+<div class="container my-3 bg-light rounded-3 pt-2 border border-dark" style="{{display}}">
+<div class="mb-3 d-flex justify-content-start ">
+  <div class="p-2 d-flex justify-content-start ">
+    <button class="btn-outline-dark btn-lg mx-2" onclick="openCity(event, 'London')">Custom Filtered</button>
+    <button class="btn-outline-dark btn-lg mx-2" onclick="openCity(event, 'Paris')">Paris</button>
+    <button class="btn-outline-dark btn-lg mx-2" onclick="openCity(event, 'Tokyo')">Tokyo</button>
+  </div>
 </div>
 
 
