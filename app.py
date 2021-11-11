@@ -2,38 +2,42 @@ from flask import Flask, render_template, request, jsonify, Response
 import io
 import csv
 import os
+import flask
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-import plotly
 import plotly.express as px
 import pandas as pd
 import numpy as np
 import datetime
 import operator
 from flask.helpers import url_for
-import openpyxl
+from werkzeug.utils import secure_filename
+# import openpyxl
+import utility
+
 
 app = Flask(__name__)
-
-# def saveFile(uploaded_file):
-#     UPLOAD_FOLDER = 'static'
-#     app.config['UPLOAD_FOLDER'] =  UPLOAD_FOLDER
-#     file_path = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file.filename)
+app.config['UPLOAD_FOLDER'] = 'static/files'
+    # app.config['UPLOAD_FOLDER'] =  UPLOAD_FOLDER
+    # file_path = os.path.join(app.config['UPLOAD_FOLDER'], 'temp.xlsx')
+# def saveFile(uploaded_file, filetype):
+    
+#     file_path = f'static/temp.{filetype}'
 #     uploaded_file.save(file_path)
 
-def duration(start_value, end_value):
+# def duration(start_value, end_value):
 
-    Start = datetime.datetime.fromisoformat(start_value)
-    End = datetime.datetime.fromisoformat(end_value)
+#     Start = datetime.datetime.fromisoformat(start_value)
+#     End = datetime.datetime.fromisoformat(end_value)
 
-    start_value = Start            
-    end_value = End
+#     start_value = Start            
+#     end_value = End
 
-    duration = End - Start
-    seconds = int(duration. total_seconds())
+#     duration = End - Start
+#     seconds = int(duration. total_seconds())
 
-    return seconds, Start, End
+#     return seconds, Start, End
 
 def generateDictArray(csvFile):
     data = []
@@ -44,7 +48,7 @@ def generateDictArray(csvFile):
             csv_file = csv.DictReader(file)
             for row in csv_file:
                 # print(row)
-                para = duration(row['START'], row['END'])
+                para = utility.duration(row['START'], row['END'])
                 
                 row['DURATION'] = para[0] 
                 row['START'] = para[1] 
@@ -57,72 +61,33 @@ def generateDictArray(csvFile):
     df = pd.read_csv(f'static/{csvFile}.csv')
     return data
 
-def filterData(data, min='', max='', recordDate='', mobileNo='', Type=''):
-
-    filteredData = []
-
-    if min=='':
-        min = 0
-    else:
-        min = int(min)
-
-    if max=='':
-        max=1000000  #change with INT MAX
-    else:
-        max = int(max)
-
-    if recordDate == '':
-        recordDate=datetime.date.today()
-        # print(recordDate, type(recordDate))
-    else:
-        recordDate = datetime.datetime.strptime(recordDate, '%Y-%m-%d').date()
-        # print(recordDate, type(recordDate))
-    
-    if Type == 'ALL':
-    
-        for dict in data:
-           
-            if dict['DURATION']>=min and dict['DURATION']<=max and dict['START'].date() < recordDate :
-                if mobileNo == '': 
-                    filteredData.append(dict)
-                elif dict['PHONE'] == mobileNo: 
-                    filteredData.append(dict)
-    else:
-        for dict in data:
-        
-            if dict['DURATION']>=min and dict['DURATION']<=max and dict['START'].date() < recordDate and dict['TYPE'] == Type:
-                if mobileNo == '': 
-                    filteredData.append(dict)
-                elif dict['PHONE'] == mobileNo: 
-                    filteredData.append(dict)
-
-
-    # print(filteredData, len(filteredData))
-
-    if len(filteredData)==0:
-        return 'No Records Found'
-    else:
-        return filteredData
 
 @app.route('/duration.png')
 def plot_duration():
     fig = Figure()
     axis = fig.add_subplot(1, 1, 1)
     duration=[]
-    for i in range(100):
-        start=datetime.datetime.strptime(df['START'][i],'%Y-%m-%d %H:%M:%S')
-        end=datetime.datetime.strptime(df['END'][i],'%Y-%m-%d %H:%M:%S')
+    for i in range(len(df)): 
+        if  type(df['START'][i]) == 'str':
+            start=datetime.datetime.strptime(df['START'][i],'%Y-%m-%d %H:%M:%S')
+            end=datetime.datetime.strptime(df['END'][i],'%Y-%m-%d %H:%M:%S')
+
+        else:
+            start = df['START'][i]
+            end = df['END'][i]
         duration.append((end-start).total_seconds())
         callee_duration={}
-    for i in range(100):
+    for i in range(df.shape[0]):
         if(str(df['PHONE'][i]) in callee_duration):
             callee_duration[str(df['PHONE'][i])]+=duration[i]
         else:
             callee_duration[str(df['PHONE'][i])]=duration[i]
+    # print(callee_duration)
+    
     callee_duration= dict( sorted(callee_duration.items(), key=operator.itemgetter(1),reverse=True))
 
     axis.bar(callee_duration.keys(),callee_duration.values())
-    axis.set_xticks(callee_duration.keys())
+    #axis.set_xticks(callee_duration.keys())
     
     axis.set_xticklabels(callee_duration.keys(),rotation=40)    
     output = io.BytesIO()
@@ -187,9 +152,18 @@ def home():
         recordDate = request.form['date']
         mobileNo = request.form['number']
         f = request.files['file']
-
+        print(f)
         name = f.filename
-        # print(type(f))
+        # uploaded_files = flask.request.files.getlist("file[]")
+        # print(uploaded_files)
+        # for file in uploaded_files:
+        #     filename = secure_filename(file.filename)
+        #     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        
+        # name = uploaded_files[0]
+        # print('')
+        # print(name, csvFile)
+        # print('')
 
         # print(min, max, recordDate, type(recordDate), mobileNo, type(mobileNo))
 
@@ -211,13 +185,13 @@ def home():
             stream = io.StringIO(f.stream.read().decode("UTF8"), newline=None)
             csv_file = csv.DictReader(stream)
 
-
+            print(csv_file)
 
             for row in csv_file:
 
                 row = dict((k.upper(), v) for k, v in row.items())
                 
-                para = duration(row['START'], row['END'])
+                para = utility.duration(row['START'], row['END'])
                 row['DURATION'] = para[0]
                 
                 row['START'] = para[1] 
@@ -238,21 +212,38 @@ def home():
             df = pd.read_csv('static/temp.csv')
 
         elif 'xlsx' in name:
-            data_xls = pd.read_excel(f, engine='openpyxl')
-            file = data_xls.to_csv ('static/target.csv', index = None, header=True)
-            csvFile = 'target'
-            data = generateDictArray(csvFile)
+            utility.saveFile(f, 'temp.xlsx')
+            xl_file=pd.ExcelFile("static/sample12.xlsx")
+            dfs = {sheet_name: xl_file.parse(sheet_name) for sheet_name in xl_file.sheet_names}
+
+            data_xls = pd.read_excel('static/temp.xlsx', 'sample1', dtype=str, index_col=None)
+            data_xls.to_csv('static/temp_csv.csv', encoding='utf-8', index=False)
+            
+            with open('static/temp_csv.csv', 'r') as file:
+                reader = csv.reader(file)
+                for row in reader:
+                    print(row)
+
+            # df = pd.read_excel(xlsx, 'sample1')
+            # print(df)
+            # data_xls = pd.read_excel(f, engine='openpyxl')
+            # file = data_xls.to_csv ('static/target.csv', index = None, header=True)
+            # csvFile = 'target'
+            # data = generateDictArray(csvFile)
 
 
         if min == '' and max == '' and recordDate == '' and mobileNo == '' and Type == '':
             filteredData = data
         else:
-            filteredData = filterData(data, min, max, recordDate, mobileNo, Type)
+            filteredData = utility.filterData(data, min, max, recordDate, mobileNo, Type)
+            # print(type(filteredData))
+            df = pd.DataFrame(filteredData)
 
         display = 'display: block'
        
         array = df.T.values.tolist()
-        # print(array)
+        print(array)
+        # #print(array)
         # stream = io.TextIOWrapper(f.stream._file, "UTF8", newline=None)
         # csv_input = csv.reader(stream)
         
