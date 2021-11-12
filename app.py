@@ -18,7 +18,7 @@ import utility
 
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = 'static/files'
+app.config['UPLOAD_FOLDER'] = 'static/uploads'
     # app.config['UPLOAD_FOLDER'] =  UPLOAD_FOLDER
     # file_path = os.path.join(app.config['UPLOAD_FOLDER'], 'temp.xlsx')
 # def saveFile(uploaded_file, filetype):
@@ -39,219 +39,207 @@ app.config['UPLOAD_FOLDER'] = 'static/files'
 
 #     return seconds, Start, End
 
-def generateDictArray(csvFile):
-    data = []
+# def generateDictArray(csvFile):
+#     data = []
 
-    global df
+#     global df
     
-    with open(f'static/{csvFile}.csv', 'r') as file:
-            csv_file = csv.DictReader(file)
-            for row in csv_file:
-                # print(row)
-                para = utility.duration(row['START'], row['END'])
+#     with open(f'static/{csvFile}.csv', 'r') as file:
+#             csv_file = csv.DictReader(file)
+#             for row in csv_file:
+#                 # print(row)
+#                 para = utility.duration(row['START'], row['END'])
                 
-                row['DURATION'] = para[0] 
-                row['START'] = para[1] 
-                row['END'] = para[2]
-                data.append(row)
+#                 row['DURATION'] = para[0] 
+#                 row['START'] = para[1] 
+#                 row['END'] = para[2]
+#                 data.append(row)
 
-                # duration = row['start_time'] - row['end_time']
-                # data.append(row)
+#                 # duration = row['start_time'] - row['end_time']
+#                 # data.append(row)
                 
-    df = pd.read_csv(f'static/{csvFile}.csv')
-    return data
+#     df = pd.read_csv(f'static/{csvFile}.csv')
+#     return data
 
 
-@app.route('/duration.png')
-def plot_duration():
-    fig = Figure()
-    axis = fig.add_subplot(1, 1, 1)
-    duration=[]
-    for i in range(len(df)): 
-        if  type(df['START'][i]) == 'str':
-            start=datetime.datetime.strptime(df['START'][i],'%Y-%m-%d %H:%M:%S')
-            end=datetime.datetime.strptime(df['END'][i],'%Y-%m-%d %H:%M:%S')
+# @app.route('/duration.png')
+# def plot_duration():
+#     fig = Figure()
+#     axis = fig.add_subplot(1, 1, 1)
+#     duration=[]
+#     for i in range(len(df)): 
+#         if  type(df['START'][i]) == 'str':
+#             start=datetime.datetime.strptime(df['START'][i],'%Y-%m-%d %H:%M:%S')
+#             end=datetime.datetime.strptime(df['END'][i],'%Y-%m-%d %H:%M:%S')
 
-        else:
-            start = df['START'][i]
-            end = df['END'][i]
-        duration.append((end-start).total_seconds())
-        callee_duration={}
-    for i in range(df.shape[0]):
-        if(str(df['PHONE'][i]) in callee_duration):
-            callee_duration[str(df['PHONE'][i])]+=duration[i]
-        else:
-            callee_duration[str(df['PHONE'][i])]=duration[i]
-    # print(callee_duration)
+#         else:
+#             start = df['START'][i]
+#             end = df['END'][i]
+#         duration.append((end-start).total_seconds())
+#         callee_duration={}
+#     for i in range(df.shape[0]):
+#         if(str(df['PHONE'][i]) in callee_duration):
+#             callee_duration[str(df['PHONE'][i])]+=duration[i]
+#         else:
+#             callee_duration[str(df['PHONE'][i])]=duration[i]
+#     # print(callee_duration)
     
-    callee_duration= dict( sorted(callee_duration.items(), key=operator.itemgetter(1),reverse=True))
+#     callee_duration= dict( sorted(callee_duration.items(), key=operator.itemgetter(1),reverse=True))
 
-    axis.bar(callee_duration.keys(),callee_duration.values())
-    #axis.set_xticks(callee_duration.keys())
+#     axis.bar(callee_duration.keys(),callee_duration.values())
+#     #axis.set_xticks(callee_duration.keys())
     
-    axis.set_xticklabels(callee_duration.keys(),rotation=40)    
-    output = io.BytesIO()
-    FigureCanvas(fig).print_png(output)
-    return Response(output.getvalue(), mimetype='image/png')
+#     axis.set_xticklabels(callee_duration.keys(),rotation=40)    
+#     output = io.BytesIO()
+#     FigureCanvas(fig).print_png(output)
+#     return Response(output.getvalue(), mimetype='image/png')
 
-@app.route('/frequency.png')
-def plot_frequency():
+# @app.route('/frequency.png')
+# def plot_frequency():
     
-    fig = Figure()
-    axis = fig.add_subplot(1, 1, 1)
-    numbers=df['PHONE'].astype('str').value_counts().head(10).index
-    freq=df['PHONE'].value_counts().head(10)
-    axis.bar(numbers,freq)
-    axis.set_xticks(numbers)
-    axis.set_xticklabels(numbers,rotation=40)
-    output = io.BytesIO()
-    FigureCanvas(fig).print_png(output)
-    return Response(output.getvalue(), mimetype='image/png')
+#     fig = Figure()
+#     axis = fig.add_subplot(1, 1, 1)
+#     numbers=df['PHONE'].astype('str').value_counts().head(10).index
+#     freq=df['PHONE'].value_counts().head(10)
+#     axis.bar(numbers,freq)
+#     axis.set_xticks(numbers)
+#     axis.set_xticklabels(numbers,rotation=40)
+#     output = io.BytesIO()
+#     FigureCanvas(fig).print_png(output)
+#     return Response(output.getvalue(), mimetype='image/png')
 
-@app.route('/type.png')
-def plot_type():
+# @app.route('/type.png')
+# def plot_type():
  
-    fig = Figure()
-    axis = fig.add_subplot(1, 1, 1)
-    axis.bar(df['TYPE'].value_counts().index,df['TYPE'].value_counts())
-    output = io.BytesIO()
-    FigureCanvas(fig).print_png(output)
-    return Response(output.getvalue(), mimetype='image/png')
+#     fig = Figure()
+#     axis = fig.add_subplot(1, 1, 1)
+#     axis.bar(df['TYPE'].value_counts().index,df['TYPE'].value_counts())
+#     output = io.BytesIO()
+#     FigureCanvas(fig).print_png(output)
+#     return Response(output.getvalue(), mimetype='image/png')
 
-@app.route('/imei.png')
-def plot_imei():
+# @app.route('/imei.png')
+# def plot_imei():
     
-    fig = Figure()
-    axis = fig.add_subplot(1, 1, 1)
-    imei=[]
-    for i in df['IMEI1']:
-        imei.append(i)
-    uniq,count=np.unique(imei,return_counts=True)
-    unique=[]
-    for i in uniq:
-        unique.append(str(i))
-    axis.bar(unique,count)
-    output = io.BytesIO()
-    FigureCanvas(fig).print_png(output)
-    return Response(output.getvalue(), mimetype='image/png')
+#     fig = Figure()
+#     axis = fig.add_subplot(1, 1, 1)
+#     imei=[]
+#     for i in df['IMEI1']:
+#         imei.append(i)
+#     uniq,count=np.unique(imei,return_counts=True)
+#     unique=[]
+#     for i in uniq:
+#         unique.append(str(i))
+#     axis.bar(unique,count)
+#     output = io.BytesIO()
+#     FigureCanvas(fig).print_png(output)
+#     return Response(output.getvalue(), mimetype='image/png')
 
 
 @app.route('/',methods=["POST", "GET"])
 def home():
+    
     if request.method == "POST":
-        
-        data=[]
-        formData= request.form
-        # print(formData)
-        # print(type(request.files['file']))
-
-        csvFile = request.form['selected']
-        Type = request.form['TYPE']
-        min = request.form['min']
-        max = request.form['max']
-        recordDate = request.form['date']
-        mobileNo = request.form['number']
+        formData = request.form
+        recType = formData['type']
+        minDuration = formData['min']
+        maxDuration = formData['max']
+        recNumber = formData['number']
+        recIMEI = formData['IMEI']
+        recIMSI = formData['IMSI']
+        fromTime = formData['fromTime']
+        toTime = formData['toTime']
+        fromDate = formData['fromDate']
+        toDate = formData['toDate']
         f = request.files['file']
-        print(f)
-        name = f.filename
-        # uploaded_files = flask.request.files.getlist("file[]")
-        # print(uploaded_files)
-        # for file in uploaded_files:
-        #     filename = secure_filename(file.filename)
-        #     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+        # print(recType, minDuration, maxDuration, recType, fromDate, toDate,fromTime, toTime)
         
-        # name = uploaded_files[0]
-        # print('')
-        # print(name, csvFile)
-        # print('')
+        utility.saveFile(f, 'temp.xlsx')
+        df = pd.read_excel('static/temp.xlsx')
+        df = utility.readfiles(df)
+        utility.convert(df)
+        LIST = df.to_dict('records')
+        # print(recType, minDuration, maxDuration, recType, fromDate, toDate,fromTime, toTime)
 
-        # print(min, max, recordDate, type(recordDate), mobileNo, type(mobileNo))
-
-        if name == '':
-            data = generateDictArray(csvFile)
-            
-            # print(data)
-
-                # uploaded_file = request.files['file']
-                # saveFile(uploaded_file)
-                # csvFile = request.form['file']
-                # print(csv_input)
-                # for row in csv_input:
-                #     print(row)
-            # else:
-            #     print(jsonify({"result": request.get_array(field_name='file')}))
-
-        elif 'csv' in name:
-            stream = io.StringIO(f.stream.read().decode("UTF8"), newline=None)
-            csv_file = csv.DictReader(stream)
-
-            print(csv_file)
-
-            for row in csv_file:
-
-                row = dict((k.upper(), v) for k, v in row.items())
-                
-                para = utility.duration(row['START'], row['END'])
-                row['DURATION'] = para[0]
-                
-                row['START'] = para[1] 
-                row['END'] = para[2]
-
-                data.append(row)
-            
-            # print(data)
-
-            field_names = data[0].keys()
-            # print(field_names)
-            with open('static/temp.csv', 'w') as csvfile:
-                writer = csv.DictWriter(csvfile, fieldnames = field_names)
-                writer.writeheader()
-                writer.writerows(data)
-
-            global df 
-            df = pd.read_csv('static/temp.csv')
-
-        elif 'xlsx' in name:
-            utility.saveFile(f, 'temp.xlsx')
-            xl_file=pd.ExcelFile("static/sample12.xlsx")
-            dfs = {sheet_name: xl_file.parse(sheet_name) for sheet_name in xl_file.sheet_names}
-
-            data_xls = pd.read_excel('static/temp.xlsx', 'sample1', dtype=str, index_col=None)
-            data_xls.to_csv('static/temp_csv.csv', encoding='utf-8', index=False)
-            
-            with open('static/temp_csv.csv', 'r') as file:
-                reader = csv.reader(file)
-                for row in reader:
-                    print(row)
-
-            # df = pd.read_excel(xlsx, 'sample1')
-            # print(df)
-            # data_xls = pd.read_excel(f, engine='openpyxl')
-            # file = data_xls.to_csv ('static/target.csv', index = None, header=True)
-            # csvFile = 'target'
-            # data = generateDictArray(csvFile)
-
-
-        if min == '' and max == '' and recordDate == '' and mobileNo == '' and Type == '':
-            filteredData = data
-        else:
-            filteredData = utility.filterData(data, min, max, recordDate, mobileNo, Type)
-            # print(type(filteredData))
-            df = pd.DataFrame(filteredData)
-
-        display = 'display: block'
-       
-        array = df.T.values.tolist()
-        print(array)
-        # #print(array)
-        # stream = io.TextIOWrapper(f.stream._file, "UTF8", newline=None)
-        # csv_input = csv.reader(stream)
+        if fromDate!='':
+            fromDate = datetime.datetime.strptime(fromDate, '%Y-%m-%d')
+        if toDate!='':
+            fromDate = datetime.datetime.strptime(toDate, '%Y-%m-%d')
         
-        # data = sample,
-        return render_template("index.html",  display = display, filteredData=filteredData, array = array )
+
+        # print('starts here/\n\n')
+        # print('')
+        # print(toTime)
+        
+        # print(fromTime)
+        # print('')
+        # print('starts here/\\n')
+
+        if fromTime!='':
+            fromTime = datetime.datetime.strptime(fromTime, '%H:%M')
+        if toTime!='':
+            toTime = datetime.datetime.strptime(toTime, '%H:%M')
+
+        filteredData = utility.filterdata(df=df,  phone = recNumber, imei = recIMEI, imsi = recIMSI)
+        filteredData = utility.filterdatetime(df = filteredData,  starttime=fromTime, endtime = toTime, mindur = minDuration, maxdur =  maxDuration)
+
+
+        return render_template('index.html', filteredData = LIST )
     else:
-        display = 'display: none'
-        return render_template("index.html", display = display, array = [[]])
+        return render_template('index.html', filteredData = [[]])
+
+    #     print(f)
+    #     name = f.filename
+    #     print(name)
+
+
+@app.route('/analyse-multiple', methods=["POST", "GET"])
+def uploadMultiple():
+    if request.method == "POST":
+        filenames = []
+        formData = request.form
+        IMEI = formData['IMEI']
+        number = formData['number']
+        uploaded_files = flask.request.files.getlist("file")
+        
+        for upload in uploaded_files:
+            filename = upload.filename.rsplit("/")[0]
+            filenames.append(filename)
+            destination = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            upload.save(destination)
+
+      
+
+        
+        filenames_with_IMEI = utility.findfiles('IMEI', IMEI, filenames)
+        filenames_with_number = utility.findfiles('CALLING PARTY', number, filenames)
+
+        if len(filenames_with_IMEI)==0:
+            filenames_with_IMEI = filenames_with_IMEI.append('No Files')
+        
+        
+        numbers_common_in_all = utility.common_phone(filenames)
+        
+        
+        IMEIs_common_in_all = utility.common('IMEI', filenames)
+
+        if len(IMEIs_common_in_all)==0:
+            IMEIs_common_in_all.add('No Common IMEIs')
+
+        if len(numbers_common_in_all)==0:
+            numbers_common_in_all.add('No Common IMEIs')
+
+        if len(filenames_with_number)==0:
+            filenames_with_number.append('No Common Phone Numbers')
+
+        # field = 'IMEI'
+        # utility.common()
+        
+        
+        return render_template("analyseMultiple.html", display = 'Block', IMEIs_common_in_all=IMEIs_common_in_all, numbers_common_in_all=numbers_common_in_all, filenames_with_IMEI=filenames_with_IMEI, filenames_with_number=filenames_with_number)
+    else:
+        return render_template("analyseMultiple.html", display = 'none')
 
 @app.route('/about')
 def about():
@@ -265,13 +253,9 @@ def howToUse():
 def projectDetails():
     return render_template("projectDetails.html")
 
-@app.route('/samples')
-def samples():
 
-    sample1 = generateDictArray('Sample1')
-    sample2 = generateDictArray('Sample2')
-    sample3 = generateDictArray('Sample3')
-    return render_template("sample.html",Sample1 = sample1, Sample2 = sample2, Sample3 = sample3 )
+
+
 
 # @app.route('/uploads/<path:filename>', methods=['GET', 'POST'])
 # def download(filename):

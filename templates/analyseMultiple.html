@@ -8,7 +8,7 @@
 {% block body %}
 
 <div class="container my-3 border border-3 border border-white rounded-3 p-3 bg-dark bg-opacity-90 shadow">
-  <form class= "form" action="/" method="POST" enctype="multipart/form-data">
+  <form class= "form" action="/analyse-multiple" method="POST" enctype="multipart/form-data">
 
         <!-- <div class="mb-3">
           <div class="container my-1 border border-3 border border-white rounded-3 p-3 bg-dark bg-opacity-90 shadow"><h2  class="text-white ">CDR Smart Analyser</h2></div>
@@ -24,15 +24,15 @@
         </div> -->
             
       <div class="mb-3">
-        <label for="file" class="form-label  text-white " >Upload Excel: </label>
-        <div class="mb-3 d-inline-flex ps-3"><input type="file" autocomple = "off" accept=".xlsx" class="form-control" name="file" id="query" aria-describedby="emailHelp" value="False" ></div>
+        <label for="file" class="form-label  text-white">Upload multiple xlsx: </label>
+        <div class="mb-3 d-inline-flex ps-3"><input type="file" multiple= "true" autocomple = "off" accept=".xlsx" class="form-control" name="file" id="query" aria-describedby="emailHelp" value="False" ></div>
       </div>    
-      
+
       <div class="mb-3">
         <label for="type" class="my-3 d-inline-flex ps-1 text-white" >Enter The Type Of Record:</label>
         <div class="mb-3 d-inline-flex ps-1"><input type="text" name = "type" class="form-control" ></div>
       </div>
-        
+
       <div class="d-flex justify-content-start">
         <p class="mb-3 d-inline-flex ps-1 text-white">Enter Range Of Dates:</p>
         
@@ -46,7 +46,6 @@
         <div class="mb-3 d-inline-flex ps-1"><input type="date" class="form-control" name="toDate" id="#" /></div>
       </div>
       </div>
-   
 
       <!-- <div class="mb-3">
         <label for="date" class="form-label text-white" >Enter Date You Want To See Data Of:   </label>
@@ -87,7 +86,7 @@
       </div>
 
       <div class="mb-3">
-        <label for="IMEI" class="my-3 d-inline-flex ps-1 text-white" >Select IMEI:</label>
+        <label for="IMEI" class="my-3 d-inline-flex ps-1 text-white" >Enter IMEI:</label>
         <div class="mb-3 d-inline-flex ps-1"><input type="text" name = "IMEI" class="form-control" ></div>
       </div>
 
@@ -103,94 +102,97 @@
 <div class="container my-3 bg-light rounded-3 pt-2 border border-dark" style="{{display}}">
 <div class="mb-3 d-flex justify-content-start border-bottom">
   <div class="p-2 d-flex justify-content-start ">
-    <button class="btn-outline-dark btn-lg mx-2" onclick="openCity(event, 'customfilter')" data-toggle="tooltip" data-placement="bottom" title="Filters data upon parameters given above">Custom Filtered</button>
-    <button class="btn-outline-dark btn-lg mx-2" onclick="openCity(event, 'Frequency')" data-toggle="tooltip" data-placement="bottom" title="shows the people who has been most contacted with">Frequency</button>
-    <button class="btn-outline-dark btn-lg mx-2" onclick="openCity(event, 'TYPE')" data-toggle="tooltip" data-placement="bottom" title="shows the count of each type of record">TYPE</button>
-    <button class="btn-outline-dark btn-lg mx-2" onclick="openCity(event, 'IMEI')" data-toggle="tooltip" data-placement="bottom" title="shows the most used IMEI's in the record">IMEI</button>
-    <button class="btn-outline-dark btn-lg mx-2" onclick="openCity(event, 'Call Duration')" data-toggle="tooltip" data-placement="bottom" title="shows the durations" >Duration</button>
+    <!-- <button class="btn-outline-dark btn-lg mx-2" onclick="openCity(event, 'customfilter')" data-toggle="tooltip" data-placement="bottom" title="Filters data upon parameters given above">Custom Filtered</button> -->
+    <!-- <button class="btn-outline-dark btn-lg mx-2" onclick="openCity(event, 'Frequency')" data-toggle="tooltip" data-placement="bottom" title="shows the people who has been most contacted with">Frequency</button> -->
+    <button class="btn-outline-dark btn-lg mx-2" onclick="openCity(event, 'Common_IMEIs')" data-toggle="tooltip" data-placement="bottom" >Common IMEIs</button>
+    <button class="btn-outline-dark btn-lg mx-2" onclick="openCity(event, 'Common_Numbers')" data-toggle="tooltip" data-placement="bottom" >Common Numbers</button>
+    <button class="btn-outline-dark btn-lg mx-2" onclick="openCity(event, 'IMEI_CDR_List')" data-toggle="tooltip" data-placement="bottom" >IMEI</button>
+    <button class="btn-outline-dark btn-lg mx-2" onclick="openCity(event, 'Numbers_CDR_List')" data-toggle="tooltip" data-placement="bottom" >IMEI</button>
+    <!-- <button class="btn-outline-dark btn-lg mx-2" onclick="openCity(event, 'Location')" data-toggle="tooltip" data-placement="bottom" title="shows the location of contact" >Location</button> -->
+    <!-- <button class="btn-outline-dark btn-lg mx-2" onclick="openCity(event, 'Call Duration')" data-toggle="tooltip" data-placement="bottom" title="shows the durations" >Duration</button> -->
 
   </div>
 </div>
 
 
-<div id="customfilter" class="tabcontent">
-  <div class="container my-3 border border-3 border border-white rounded-3 p-3 bg-dark bg-opacity-90 shadow"><h3  class="text-white "><u>Custom Filtered</u></h3></div>
-
-      <!-- PHONE,IMEI1,IMEI2,TYPE,IMSI,Start,End,Cell -->
+<div id="Common_IMEIs" class="tabcontent">
+  <div class="container my-3 border border-3 border border-white rounded-3 p-3 bg-dark bg-opacity-90 shadow"><h3  class="text-white "><u>Common_IMEIs</u></h3></div>
+  <div class= "container my-4 d-flex justify-content-center">
     <table class="table border border-3 border border-white rounded-3 p-3 bg-dark bg-opacity-90 shadow">
-          <thead>
-            <tr>
-              <th scope="col" class="text-white">SNo</th>
-              <th scope="col" class="text-white" >CALLING PARTY</th>
-              <th scope="col" class="text-white">CALLED PARTY</th>
-              <th scope="col" class="text-white">DATE</th>
-              <th scope="col" class="text-white">TIME</th>
-              <th scope="col" class="text-white">DURATION(S)</th>
-              <th scope="col" class="text-white">CELL1</th>
-              <th scope="col" class="text-white">CELL2 </th>
-              <th scope="col" class="text-white">CALL TYPE</th> 
-              <th scope="col" class="text-white">IMEI</th>
-              <th scope="col" class="text-white">IMSI</th>
-              <th scope="col" class="text-white">ROAM</th>       
-            </tr>
-          </thead>
-          <tbody></tbody>
-          {% if filteredData == 'No Records Found' %}
-          <tr><td  class="text-white">{{filteredData}}</td></tr>
-          
-          {% else %}
-          
-
-    {% for i in filteredData %}      
-            
-            <tr>
-              <th class="text-white" scope="row">{{loop.index}}</th>
-              <td class="text-white" > {{i['CALLING PARTY']}} </td>
-              <td class="text-white"> {{i['CALLED PARTY']}} </td>
-              <td class="text-white"> {{i['DATE']}} </td>
-              <td class="text-white"> {{i['TIME']}} </td>
-              <td class="text-white"> {{i['DURATION']}} </td>
-              <td class="text-white"> {{i['DURATION(S)']}} </td>
-              <td class="text-white"> {{i['CELL1']}} </td>
-              <td class="text-white"> {{i['CELL2']}} </td>
-              <td class="text-white"> {{i['CALL TYPE']}} </td>
-              <td class="text-white"> {{i['IMEI']}} </td>
-              <td class="text-white"> {{i['IMSI']}} </td>
-              <td class="text-white"> {{i['ROAM']}} </td>
-            </tr>
-  
+      <thead>
+      <tr>
+        <th scope="col" class="text-white">S No</th>
+        <th scope="col" class="text-white">IMEI Number</th>
+      </tr>
+    </thead>
+      {%for i in IMEIs_common_in_all%}
+      <tr><th class="text-white" scope="row">{{loop.index}}</th></tr> 
+      <tr><td class="text-white">  {{i}} </td></tr>
       {% endfor %}
-      {% endif %}
-      
     </table>
+    </div>
 </div>
 
-<!-- <div id="Frequency" class="tabcontent">
-  <div class="container my-3 border border-3 border border-white rounded-3 p-3 bg-dark bg-opacity-90 shadow"><h3  class="text-white "><u>Frequency</u></h3></div>
- <div class= "container my-4 d-flex justify-content-center"><img src = "/frequency.png" alt = "my plot"></div>
+<div id="Common_Numbers" class="tabcontent"> 
+  <div class="container my-3 border border-3 border border-white rounded-3 p-3 bg-dark bg-opacity-90 shadow"><h3  class="text-white "><u>Common_IMEIs</u></h3></div>
+  <div class= "container my-4 d-flex justify-content-center">
+    <table class="table border border-3 border border-white rounded-3 p-3 bg-dark bg-opacity-90 shadow">
+      <thead>
+      <tr>
+        <th scope="col" class="text-white">S No</th>
+        <th scope="col" class="text-white">Phone Number</th>
+      </tr>
+    </thead>
+      {%for i in numbers_common_in_all%}
+      <th class="text-white" scope="row">{{loop.index}}</th> 
+      <tr><td class="text-white">  {{i}} </td></tr>
+      {% endfor %}
+    </table>
+    </div>
 </div>
 
-<div id="TYPE" class="tabcontent">
-  <div class="container my-3 border border-3 border border-white rounded-3 p-3 bg-dark bg-opacity-90 shadow"><h3  class="text-white "><u>TYPE</u></h3></div>
-  <div class= "container my-4 d-flex justify-content-center"><img src = '/type.png' alt = "my plot"></div>
+<div id="IMEI_CDR_List" class="tabcontent">
+  <div class="container my-3 border border-3 border border-white rounded-3 p-3 bg-dark bg-opacity-90 shadow"><h3 class="text-white">Files Having IMEI</h3></div>  
+  <div class= "container my-4 d-flex justify-content-center">
+    <table class="table border border-3 border border-white rounded-3 p-3 bg-dark bg-opacity-90 shadow">
+      <thead>
+      <tr>
+        <th scope="col" class="text-white">S No</th>
+        <th scope="col" class="text-white">File Name</th>
+      </tr>
+    </thead>
+      {% if filenames_with_IMEI!=None %}
+      {% for i in filenames_with_IMEI%}
+      <th class="text-white" scope="row">{{loop.index}}</th> 
+      <tr><td class="text-white">  {{i}} </td></tr>
+      {% endfor %}
+      {%endif%}
+    </table>
+  </div>
 </div>
 
-<div id="IMEI" class="tabcontent">
-  <div class="container my-3 border border-3 border border-white rounded-3 p-3 bg-dark bg-opacity-90 shadow"><h3  class="text-white "><u>IMEI</u></h3></div>
- </div>
-
-<div id="Location" class="tabcontent"> 
+<div id="Numbers_CDR_List" class="tabcontent">
+  <div class="container my-3 border border-3 border border-white rounded-3 p-3 bg-dark bg-opacity-90 shadow"><h3 class="text-white">Files Having IMEI</h3></div>  
+  <div class= "container my-4 d-flex justify-content-center">
+    <table class="table border border-3 border border-white rounded-3 p-3 bg-dark bg-opacity-90 shadow">
+      <thead>
+      <tr>
+        <th scope="col" class="text-white">S No</th>
+        <th scope="col" class="text-white">File Name</th>
+      </tr>
+    </thead>
+      {% for i in filenames_with_number %}
+      <th class="text-white" scope="row">{{loop.index}}</th> 
+      <tr><td class="text-white">  {{i}} </td></tr>
+      {% endfor %}
+    </table>
+  </div>
 </div>
-
-<div id="Call Duration" class="tabcontent">
-  <div class="container my-3 border border-3 border border-white rounded-3 p-3 bg-dark bg-opacity-90 shadow"><h3 class="text-white">Duration</h3></div>  
-  <div class= "container my-4 d-flex justify-content-center"><img src="/duration.png" alt="my plot"></div>
-</div> -->
 
 </div>
 
 <script>
-function openCity(evt, cityName) {
+function openCity(evt, idname) {
   var i, tabcontent, tablinks;
   tabcontent = document.getElementsByClassName("tabcontent");
   for (i = 0; i < tabcontent.length; i++) {
@@ -200,46 +202,13 @@ function openCity(evt, cityName) {
   for (i = 0; i < tablinks.length; i++) {
     tablinks[i].className = tablinks[i].className.replace(" active", "");
   }
-  document.getElementById(cityName).style.display = "block";
+  document.getElementById(idname).style.display = "block";
   evt.currentTarget.className += " active";
 }
 </script>
-
-<!-- <div class="container my-3">
-  {{ data }}
-</div> -->
-
-<!-- <div class="container my-3">
-  
-  {% if searched!='' %}
-  <table class="table">
-      <thead>
-        <tr>
-          <th scope="col" >SNo</th>
-          <th scope="col" >A </th>
-          <th scope="col" >Title</th>
-          <th scope="col" >Description</th>
-        </tr>
-      </thead>
-      <tbody>
-  {% endif %}
-
-  
-  {% for datum in data %}      
-        
-        <tr>
-          <th scope="row">{{loop.index}}</th>
-          <td> <a href= {{datum[0]}}> <{{ typeofpin }} src ={{ datum[1] }} style = " width: 256px, height:auto "></{{ typeofpin }}> </a> </td>
-          <td>{{ datum[2] }}</td>
-          <td>{{ datum[3] }}</td>
-        </tr>
-
-  {% endfor %}
-        
-      </tbody>
-    </table> -->
 </div>
-        
+
+
 
       
 
